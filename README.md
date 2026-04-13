@@ -10,7 +10,7 @@ A template for building OpenWrt with GitHub Actions
 
 ## Usage
 
-- Click the [Use this template](https://github.com/P3TERX/Actions-OpenWrt/generate) button to create a new repository.
+- Click the [Use this template](https://github.com/Enthlinn/immortalwrt24.10-6.6-rax3000m-237/generate) button to create a new repository.
 - Generate `.config` files using [padavanonly's immortalwrt](https://github.com/padavanonly/immortalwrt-mt798x-6.6) source code. ( You can change it through environment variables in the workflow file. )
 - Push `.config` file to the GitHub repository.
 - Select `Build OpenWrt` on the Actions page.
