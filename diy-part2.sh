@@ -13,6 +13,7 @@
 # Modify default IP
 sudo apt install libfuse-dev
 ./scripts/feeds update -a 
+#dapnet-gateway编译不起来，先删了吧
 rm -rf feeds/packages/lang/golang package/jell/dapnet-gateway/
 git clone https://github.com/kenzok8/golang -b 1.26 feeds/packages/lang/golang
 ./scripts/feeds install -a
