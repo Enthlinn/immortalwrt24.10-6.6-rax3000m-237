@@ -1,0 +1,13 @@
+
+config ddns-go 'config'
+	option enabled '1'
+	option listen '[::]:9876'
+	option ttl '300'
+	option port '9876'
+	option time '300'
+	option ctimes '5'
+	option skipverify '0'
+	option noweb '0'
+	option delay '60'
+	option dns '223.5.5.5'
+
