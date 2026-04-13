@@ -15,6 +15,4 @@
 
 # Add a feed source
 # 添加软件源
-git clone https://github.com/kenzok8/openwrt-packages.git package/kenzo
-git clone https://github.com/kenzok8/small.git package/small
-git clone https://github.com/sirpdboy/luci-app-watchdog package/watchdog
+git clone https://github.com/kenzok8/jell.git package/jell
