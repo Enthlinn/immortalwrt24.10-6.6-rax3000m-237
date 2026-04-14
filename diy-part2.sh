@@ -25,5 +25,8 @@ wget -O package/jell/luci-app-quickstart/luasrc/controller/istore_backend.lua ht
 wget -O package/jell/ddns-go/file/ddns-go.init https://raw.githubusercontent.com/Enthlinn/immortalwrt24.10-6.6-rax3000m-237/refs/heads/openwrt-24.10-6.6/ddns-go
 #修改os-release
 wget -O package/base-files/files/usr/lib/os-release https://raw.githubusercontent.com/Enthlinn/immortalwrt24.10-6.6-rax3000m-237/refs/heads/openwrt-24.10-6.6/os-release
-#临时修复smartdns源码下载地址错误
-#sed -i 's/Release47.1/47.1/g' package/jell/smartdns/Makefile
+#临时修复smartdns,miniupnpd源码下载地址错误
+sed -i 's/Release47.1/47.1/' package/jell/smartdns/Makefile
+sed -i '12i PKG_VERSIONA:=2.3.10' package/jell/miniupnpd/Makefile
+sed -i 's/miniupnpd_2_3_10/2_3_10/' package/jell/miniupnpd/Makefile
+sed -i 's/(PKG_VERSION).tar.gz/(PKG_VERSIONA).tar.gz/' package/jell/miniupnpd/Makefile
