@@ -15,4 +15,9 @@
 
 # Add a feed source
 # 添加软件源
-git clone https://github.com/kenzok8/jell.git package/jell
+git clone https://github.com/kenzok8/jell.git ../jell
+cp -r ../jell/quickstart package/jell/quickstart
+cp -r ../jell/luci-app-quickstart package/jell/luci-app-quickstart
+cp -r ../jell/ddns-go package/jell/ddns-go
+cp -r ../jell/luci-app-ddns-go package/jell/luci-app-ddns-go
+git clone https://github.com/sirpdboy/luci-app-watchdog.git package/watchdog
