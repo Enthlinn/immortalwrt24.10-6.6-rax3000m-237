@@ -16,6 +16,7 @@
 # Add a feed source
 # 添加软件源
 git clone https://github.com/kenzok8/jell.git ../jell
+mkdir -p package/jell
 cp -r ../jell/quickstart package/jell/quickstart
 cp -r ../jell/luci-app-quickstart package/jell/luci-app-quickstart
 cp -r ../jell/ddns-go package/jell/ddns-go
