@@ -12,11 +12,11 @@
 
 # Modify default IP
 sudo apt install libfuse-dev
-./scripts/feeds update -a 
-#dapnet-gateway,miniupnpd,upnp编译不起来，先删了吧
-rm -rf feeds/packages/lang/golang package/jell/dapnet-gateway package/jell/miniupnpd package/jell/luci-app-upnp package/jell/mmdvm-luci
+./scripts/feeds update -a
+#更新golang,ddns-go
+rm -rf feeds/packages/lang/golang feeds/packages/net/ddns-go feeds/luci/applications/luci-app-ddns-go
 git clone https://github.com/kenzok8/golang -b 1.26 feeds/packages/lang/golang
-./scripts/feeds install -a
+./scripts/feeds install -a -f
 #修复libxcrypt无法编译
 sed -i '3i PKG_FORTIFY_SOURCE=0' package/feeds/packages/libxcrypt/Makefile
 #修复quickstart温度显示
@@ -25,5 +25,3 @@ wget -O package/jell/luci-app-quickstart/luasrc/controller/istore_backend.lua ht
 wget -O package/jell/ddns-go/file/ddns-go.init https://raw.githubusercontent.com/Enthlinn/immortalwrt24.10-6.6-rax3000m-237/refs/heads/openwrt-24.10-6.6/ddns-go.init
 #修改os-release
 wget -O package/base-files/files/usr/lib/os-release https://raw.githubusercontent.com/Enthlinn/immortalwrt24.10-6.6-rax3000m-237/refs/heads/openwrt-24.10-6.6/os-release
-#临时修复smartdns源码下载地址错误
-sed -i 's/Release47.1/47.1/' package/jell/smartdns/Makefile
