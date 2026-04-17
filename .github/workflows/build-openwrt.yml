@@ -157,7 +157,7 @@ jobs:
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
-        echo "release_tag=$("immortalwrt24.10-6.6-cmcc_rax3000m-237"+date+"%Y.%m.%d-%H%M")" >> $GITHUB_OUTPUT
+        echo "release_tag=immortalwrt24.10-6.6-cmcc_rax3000m-237-$(date +%Y.%m.%d-%H%M)" >> $GITHUB_OUTPUT
         touch release.txt
         echo "cmcc_rax3000m-237大功率固件" >> release.txt
         echo "后台：192.168.6.1" >> release.txt
