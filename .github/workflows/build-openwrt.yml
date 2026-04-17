@@ -36,10 +36,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-22.04
-    
-    env:
-      # 测试将仓库拥有者用户名定义为全局变量
-      REPO_OWNER: ${{ github.repository_owner }}
+  
       
     steps:
     - name: Checkout
@@ -102,8 +99,8 @@ jobs:
         cd openwrt
 
         #测试将编译者的用户名写到os-release
-        sed -i 's/OPENWRT_DEVICE_MANUFACTURER="%M"/OPENWRT_DEVICE_MANUFACTURER="by $REPO_OWNER"/' package/base-files/files/usr/lib/os-release
-        sed -i 's/OPENWRT_RELEASE="%D %V %C"/OPENWRT_RELEASE="%D %V %C by $REPO_OWNER"/' package/base-files/files/usr/lib/os-release
+        sed -i 's/OPENWRT_DEVICE_MANUFACTURER="%M"/OPENWRT_DEVICE_MANUFACTURER="by ${{ github.repository_owner }}"/' package/base-files/files/usr/lib/os-release
+        sed -i 's/OPENWRT_RELEASE="%D %V %C"/OPENWRT_RELEASE="%D %V %C by ${{ github.repository_owner }}"/' package/base-files/files/usr/lib/os-release
         
         echo -e "$(nproc) thread compile"
         make -j$(nproc) || make -j1 || make -j1 V=s
