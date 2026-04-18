@@ -47,7 +47,10 @@ jobs:
       run: |
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         sudo -E apt-get -qq update
-        sudo -E apt-get -qq install $(curl -fsSL git.io/depends-ubuntu-2004)
+        #疑似已经失效的依赖列表
+        #sudo -E apt-get -qq install $(curl -fsSL git.io/depends-ubuntu-2004)
+        #改成237大佬教程中的依赖，警告：下一行巨长
+        sudo -E apt-get -qq install ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential bzip2 ccache clang cmake cpio curl device-tree-compiler ecj fastjar flex gawk gettext gcc-multilib g++-multilib git gnutls-dev gperf haveged help2man intltool lib32gcc-s1 libc6-dev-i386 libelf-dev libglib2.0-dev libgmp3-dev libltdl-dev libmpc-dev libmpfr-dev libncurses-dev libpython3-dev libreadline-dev libssl-dev libtool libyaml-dev libz-dev lld llvm lrzsz mkisofs msmtp nano ninja-build p7zip p7zip-full patch pkgconf python3 python3-pip python3-ply python3-docutils python3-pyelftools qemu-utils re2c rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev zstd
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
         sudo timedatectl set-timezone "$TZ"
@@ -88,7 +91,8 @@ jobs:
       run: |
         cd openwrt
         #为什么这里有个制作默认配置文件的命令？先注释了试试
-        #make defconfig
+        #应该不用注释了，再试试
+        make defconfig
         make download -j8
         #将编译者的用户名写到os-release
         sed -i 's/OPENWRT_DEVICE_MANUFACTURER="%M"/OPENWRT_DEVICE_MANUFACTURER="${{ github.repository_owner }}"/' package/base-files/files/usr/lib/os-release
