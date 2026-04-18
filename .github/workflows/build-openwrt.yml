@@ -87,7 +87,8 @@ jobs:
       id: package
       run: |
         cd openwrt
-        make defconfig
+        #为什么这里有个制作默认配置文件的命令？先注释了试试
+        #make defconfig
         make download -j8
         #将编译者的用户名写到os-release
         sed -i 's/OPENWRT_DEVICE_MANUFACTURER="%M"/OPENWRT_DEVICE_MANUFACTURER="${{ github.repository_owner }}"/' package/base-files/files/usr/lib/os-release
