@@ -107,7 +107,8 @@ jobs:
       run: |
         cd openwrt
         #把配置文件打包进来
-        cp .config files/etc/rax.conf
+        #已经知道配置文件变动的原因了，以后不需要了
+        #cp .config files/etc/rax.conf
         echo -e "$(nproc) thread compile"
         make -j$(nproc) || make -j1 || make -j1 V=s
         echo "status=success" >> $GITHUB_OUTPUT
