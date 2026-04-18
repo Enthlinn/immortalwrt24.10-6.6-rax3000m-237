@@ -16,6 +16,7 @@
 # Add a feed source
 # 添加软件源
 git clone https://github.com/kenzok8/jell.git ../jell
+#直接添加太多软件包容易抽风，所以这里单独复制自己想要的软件包进去
 mkdir -p package/jell
 cp -r ../jell/quickstart package/jell/quickstart
 cp -r ../jell/luci-app-quickstart package/jell/luci-app-quickstart
