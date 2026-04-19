@@ -110,8 +110,13 @@ jobs:
 
     - name: Build dependencies
       run: |
-        make package/feeds/packages/libuv/compile V=s
-        make package/feeds/packages/libwebsockets/compile V=s
+        # 强制更新并安装 feeds 确保链接建立
+        ./scripts/feeds update -a
+        ./scripts/feeds install -a
+    
+        # 使用包名进行编译
+        make package/libuv/compile V=s
+        make package/libwebsockets/compile V=s
   
     - name: Build ttyd
       run: |
