@@ -109,6 +109,7 @@ jobs:
       id: compile
       run: |
         cd openwrt
+        cmake --version
         #把配置文件打包进来
         #已经知道配置文件变动的原因了，以后不需要了
         #cp .config files/etc/rax.conf
