@@ -125,7 +125,8 @@ jobs:
       id: compile
       run: |
         cd openwrt
-        cmake --version
+        #查一下cmake
+        #cmake --version
         #把配置文件打包进来
         #已经知道配置文件变动的原因了，以后不需要了
         #cp .config files/etc/rax.conf
@@ -136,11 +137,17 @@ jobs:
         echo "DEVICE_NAME=_$DEVICE" >> $GITHUB_ENV
         echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
 
+    - name: Check build
+      run: |
+        ls staging_dir/target-aarch64_cortex-a53_musl/usr/lib/ | grep websockets
+        #检查libwebsockets
+    
+    
+    
     - name: Check space usage
       if: (!cancelled())
       run: df -hT
-        ls staging_dir/target-aarch64_cortex-a53_musl/usr/lib/ | grep websockets
-        #检查libwebsockets
+
 
     - name: Upload bin directory
       uses: actions/upload-artifact@main
