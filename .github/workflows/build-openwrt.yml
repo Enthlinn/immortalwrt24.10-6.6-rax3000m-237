@@ -118,8 +118,6 @@ jobs:
         #cp .config files/etc/rax.conf
         echo -e "$(nproc) thread compile"
         make -j$(nproc) || make -j1 || make -j1 V=s
-        #检查下libwebsockets编译结果
-        ls staging_dir/target-aarch64_cortex-a53_musl/usr/lib/ | grep websockets
         echo "status=success" >> $GITHUB_OUTPUT
         DEVICE=$(grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' | tr -d '\n' | tr -d ' ')
         echo "DEVICE_NAME=_$DEVICE" >> $GITHUB_ENV
@@ -128,6 +126,8 @@ jobs:
     - name: Check space usage
       if: (!cancelled())
       run: df -hT
+        ls staging_dir/target-aarch64_cortex-a53_musl/usr/lib/ | grep websockets
+        #检查libwebsockets
 
     - name: Upload bin directory
       uses: actions/upload-artifact@main
