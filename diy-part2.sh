@@ -27,3 +27,15 @@ sed -i '3i PKG_FORTIFY_SOURCE=0' package/feeds/packages/libxcrypt/Makefile
 wget -O package/jell/luci-app-quickstart/luasrc/controller/istore_backend.lua https://raw.githubusercontent.com/Enthlinn/immortalwrt24.10-6.6-rax3000m-237/refs/heads/openwrt-24.10-6.6/istore_backend.lua
 #修复ddns-go无法从luci启动
 wget -O package/jell/ddns-go/file/ddns-go.init https://raw.githubusercontent.com/Enthlinn/immortalwrt24.10-6.6-rax3000m-237/refs/heads/openwrt-24.10-6.6/ddns-go.init
+# 修复 libwebsockets 未启用 libuv 的问题（适配 ttyd 编译）
+LIBWS_DIR="package/feeds/packages/libwebsockets"
+# 检查 libwebsockets 的 Makefile 是否存在
+if [ -f "${LIBWS_DIR}/Makefile" ]; then
+    # 向 CMAKE_ARGS 中追加 -DLWS_WITH_LIBUV=ON
+    sed -i '/CMAKE_ARGS/ s/$/ -DLWS_WITH_LIBUV=ON/' ${LIBWS_DIR}/Makefile
+    # 可选：确保 libuv 被作为依赖添加（防止依赖缺失）
+    sed -i '/DEPENDS/ s/$/ +libuv/' ${LIBWS_DIR}/Makefile
+    echo "已为 libwebsockets 启用 libuv 支持"
+else
+    echo "警告：未找到 libwebsockets Makefile，路径可能错误"
+fi
