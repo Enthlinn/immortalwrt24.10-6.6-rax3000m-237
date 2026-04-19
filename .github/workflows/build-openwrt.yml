@@ -108,6 +108,19 @@ jobs:
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
 
+    - name: Build dependencies
+      run: |
+        make package/feeds/packages/libuv/compile V=s
+        make package/feeds/packages/libwebsockets/compile V=s
+  
+    - name: Build ttyd
+      run: |
+        make package/feeds/packages/ttyd/compile V=s
+
+
+
+        
+
     - name: Compile the firmware
       id: compile
       run: |
