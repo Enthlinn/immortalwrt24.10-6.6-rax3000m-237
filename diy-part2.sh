@@ -16,9 +16,9 @@ sudo apt install libfuse-dev
 #更新golang,ddns-go
 rm -rf feeds/packages/lang/golang feeds/packages/net/ddns-go feeds/luci/applications/luci-app-ddns-go
 git clone https://github.com/kenzok8/golang -b 1.26 feeds/packages/lang/golang
-./scripts/feeds install -a
+./scripts/feeds install -a -f
 #强制更新ddns-go软件包
-./scripts/feeds install -f luci-app-ddns-go ddns-go
+#./scripts/feeds install -f luci-app-ddns-go ddns-go
 #修复ddns-go无法在升级时保留配置
 echo "/etc/ddns-go" >> package/base-files/files/etc/sysupgrade.conf
 #修复libxcrypt无法编译
