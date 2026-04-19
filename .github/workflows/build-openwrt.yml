@@ -82,6 +82,33 @@ jobs:
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
 
+
+        # 原 workflow 中 Load custom configuration 步骤后
+    - name: Fix libwebsockets & ttyd compile config
+      run: |
+        cd openwrt
+        # ========== 修复 1：libwebsockets 启用 libuv ==========
+        LIBWS_MAKEFILE="package/feeds/packages/libwebsockets/Makefile"
+        if [ -f "$LIBWS_MAKEFILE" ]; then
+        # 1. 追加 LWS_WITH_LIBUV=ON 到 CMAKE_ARGS
+          sed -i '/CMAKE_ARGS/ s/$/ -DLWS_WITH_LIBUV=ON -DLWS_WITH_STATIC=ON/' "$LIBWS_MAKEFILE"
+          # 2. 强制添加 libuv 依赖（防止依赖缺失）
+          sed -i '/DEPENDS/s/$/ +libuv/' "$LIBWS_MAKEFILE"
+          echo "✅ libwebsockets 已启用 libuv 支持"
+          else
+          echo "❌ 未找到 libwebsockets Makefile，路径：$LIBWS_MAKEFILE"
+          ls -l package/feeds/packages/ | grep libwebsockets # 打印实际路径排查
+          exit 1
+        fi
+        TTYD_CMAKELISTS="package/feeds/packages/ttyd/CMakeLists.txt"
+        if [ -f "$TTYD_CMAKELISTS" ]; then
+        # 修复 CMake 最低版本警告（可选但建议）
+          sed -i '1s/^cmake_minimum_required.*/cmake_minimum_required(VERSION 3.5)/' "$TTYD_CMAKELISTS"
+          echo "✅ ttyd CMake 版本已适配"
+        fi
+
+    
+
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
       if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
