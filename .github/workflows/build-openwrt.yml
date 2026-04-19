@@ -108,13 +108,16 @@ jobs:
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
 
-    - name: Build dependencies
+    - name: Build Toolchain
       run: |
         cd openwrt
-        # 强制更新并安装 feeds 确保链接建立
-        ./scripts/feeds update -a
-        ./scripts/feeds install -a
-    
+        # 仅编译工具和工具链，不编译所有包，速度较快
+        make tools/install -j$(nproc) || make tools/install -j1 V=s
+        make toolchain/install -j$(nproc) || make toolchain/install -j1 V=s
+        
+    - name: Build dependencies
+      run: |
+        cd openwrt    
         # 使用包名进行编译
         make package/libuv/compile V=s
         make package/libwebsockets/compile V=s
