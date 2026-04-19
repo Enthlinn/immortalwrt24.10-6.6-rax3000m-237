@@ -110,6 +110,7 @@ jobs:
 
     - name: Build dependencies
       run: |
+        cd openwrt
         # 强制更新并安装 feeds 确保链接建立
         ./scripts/feeds update -a
         ./scripts/feeds install -a
@@ -120,6 +121,7 @@ jobs:
   
     - name: Build ttyd
       run: |
+        cd openwrt
         make package/feeds/packages/ttyd/compile V=s
 
 
