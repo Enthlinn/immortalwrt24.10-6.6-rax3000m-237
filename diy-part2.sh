@@ -11,8 +11,6 @@
 #
 
 # Modify default IP
-sudo apt install libfuse-dev
-./scripts/feeds update -a
 #更新golang,ddns-go
 rm -rf feeds/packages/lang/golang feeds/packages/net/ddns-go feeds/luci/applications/luci-app-ddns-go
 git clone https://github.com/kenzok8/golang -b 1.26 feeds/packages/lang/golang
