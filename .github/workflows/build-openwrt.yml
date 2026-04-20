@@ -128,6 +128,14 @@ jobs:
         echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
 
     
+    - name: Check Build Info
+      run: |
+        echo "--- Checking smartdns and argon in buildinfo ---"
+        cat openwrt/bin/targets/*/*/*.buildinfo | grep -E "smartdns|argon"
+        echo "--- Full config.buildinfo ---"
+        cat openwrt/bin/targets/*/*/*.buildinfo
+
+        
     - name: Check space usage
       if: (!cancelled())
       run: df -hT
