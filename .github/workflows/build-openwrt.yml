@@ -118,7 +118,9 @@ jobs:
         
     - name: Build dependencies
       run: |
-        cd openwrt    
+        cd openwrt
+        #参试启用-DLWS_WITH_LIBUV
+        sed -i 's/CMAKE_OPTIONS += -DLWS_WITH_ULOOP=ON/CMAKE_OPTIONS += -DLWS_WITH_ULOOP=ON -DLWS_WITH_LIBUV=ON/g' package/feeds/packages/libwebsockets/Makefile
         # 使用包名进行编译
         make package/libuv/compile V=s
         make package/libwebsockets/compile V=s
