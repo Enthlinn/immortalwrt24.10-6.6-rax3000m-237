@@ -97,7 +97,7 @@ jobs:
         #应该不用注释了，再试试
         #原来这是自动修复依赖，那按理来说可以直接修改.config的luci-app来加入自己想要的软件包了
         #但也会导致缺少依赖的软件包会被自动去掉来着
-        #make defconfig
+        make defconfig
         #在这里塞几个检查看看错哪了
         #塞错了这里还查不到
         #ls staging_dir/target-aarch64_cortex-a53_musl/usr/lib/ | grep websockets
@@ -105,34 +105,11 @@ jobs:
         #将编译者的用户名写到os-release
         sed -i 's/OPENWRT_DEVICE_MANUFACTURER="%M"/OPENWRT_DEVICE_MANUFACTURER="${{ github.repository_owner }}"/' package/base-files/files/usr/lib/os-release
         sed -i 's/OPENWRT_RELEASE="%D %V %C"/OPENWRT_RELEASE="%D %V %C by ${{ github.repository_owner }}"/' package/base-files/files/usr/lib/os-release
+        #修复libwebsockets缺少-DLWS_WITH_LIBUV导致ttyd编译通不过
+        sed -i 's/CMAKE_OPTIONS += -DLWS_WITH_ULOOP=ON/CMAKE_OPTIONS += -DLWS_WITH_ULOOP=ON -DLWS_WITH_LIBUV=ON/g' package/feeds/packages/libwebsockets/Makefile
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
-
-    - name: Build Toolchain
-      run: |
-        cd openwrt
-        # 仅编译工具和工具链，不编译所有包，速度较快
-        make tools/install -j$(nproc) || make tools/install -j1 V=s
-        make toolchain/install -j$(nproc) || make toolchain/install -j1 V=s
-        make target/compile -j$(nproc) || make target/compile -j1 V=s
-        
-    - name: Build dependencies
-      run: |
-        cd openwrt
-        #参试启用-DLWS_WITH_LIBUV
-        sed -i 's/CMAKE_OPTIONS += -DLWS_WITH_ULOOP=ON/CMAKE_OPTIONS += -DLWS_WITH_ULOOP=ON -DLWS_WITH_LIBUV=ON/g' package/feeds/packages/libwebsockets/Makefile
-        # 使用包名进行编译
-        make package/libuv/compile V=s
-        make package/libwebsockets/compile V=s
-  
-    - name: Build ttyd
-      run: |
-        cd openwrt
-        make package/feeds/packages/ttyd/compile V=s
-
-
-
-        
+                
 
     - name: Compile the firmware
       id: compile
