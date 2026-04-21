@@ -24,8 +24,7 @@ env:
   REPO_BRANCH: openwrt-24.10-6.6
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: rax3000m.config
-  DIY_P1_SH: diy-part1.sh
-  DIY_P2_SH: diy-part2.sh
+  DIY_SH: diy.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_COWTRANSFER: false
@@ -47,12 +46,6 @@ jobs:
       run: |
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         sudo -E apt-get -qq update
-        #疑似已经失效的依赖列表
-        #sudo -E apt-get -qq install $(curl -fsSL git.io/depends-ubuntu-2004)
-        #改成237大佬教程中的依赖，警告：下一行巨长
-        #也不行再换一个
-        #sudo -E apt-get -qq install ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential bzip2 ccache clang cmake cpio curl device-tree-compiler ecj fastjar flex gawk gettext gcc-multilib g++-multilib git gnutls-dev gperf haveged help2man intltool lib32gcc-s1 libc6-dev-i386 libelf-dev libglib2.0-dev libgmp3-dev libltdl-dev libmpc-dev libmpfr-dev libncurses-dev libpython3-dev libreadline-dev libssl-dev libtool libyaml-dev libz-dev lld llvm lrzsz mkisofs msmtp nano ninja-build p7zip p7zip-full patch pkgconf python3 python3-pip python3-ply python3-docutils python3-pyelftools qemu-utils re2c rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev zstd
-        #本地机曾使用此脚本安装依赖
         sudo -E bash -c 'bash <(curl -s https://build-scripts.immortalwrt.org/init_build_environment.sh)'
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
@@ -65,24 +58,18 @@ jobs:
       run: |
         df -hT $PWD
         git clone -b $REPO_BRANCH --single-branch --filter=blob:none $REPO_URL openwrt
+        openwrt/scripts/feeds update -a
+        openwrt/scripts/feeds install -a
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
     - name: Load custom feeds
       run: |
         [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
-        chmod +x $DIY_P1_SH
-        cd openwrt
-        ./scripts/feeds update -a
-        ./scripts/feeds install -a
-        $GITHUB_WORKSPACE/$DIY_P1_SH
-
-    - name: Load custom configuration
-      run: |
         [ -e files ] && mv files openwrt/files
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-        chmod +x $DIY_P2_SH
+        chmod +x $DIY_SH
         cd openwrt
-        $GITHUB_WORKSPACE/$DIY_P2_SH
+        $GITHUB_WORKSPACE/$DIY_SH
 
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
@@ -95,20 +82,13 @@ jobs:
       id: package
       run: |
         cd openwrt
-        #为什么这里有个制作默认配置文件的命令？先注释了试试
-        #应该不用注释了，再试试
-        #原来这是自动修复依赖，那按理来说可以直接修改.config的luci-app来加入自己想要的软件包了
-        #但也会导致缺少依赖的软件包会被自动去掉来着
         make defconfig
-        #在这里塞几个检查看看错哪了
-        #塞错了这里还查不到
-        #ls staging_dir/target-aarch64_cortex-a53_musl/usr/lib/ | grep websockets
         make download -j8
         #将编译者的用户名写到os-release
         sed -i 's/OPENWRT_DEVICE_MANUFACTURER="%M"/OPENWRT_DEVICE_MANUFACTURER="${{ github.repository_owner }}"/' package/base-files/files/usr/lib/os-release
         sed -i 's/OPENWRT_RELEASE="%D %V %C"/OPENWRT_RELEASE="%D %V %C by ${{ github.repository_owner }}"/' package/base-files/files/usr/lib/os-release
-        #修复libwebsockets缺少-DLWS_WITH_LIBUV导致ttyd编译通不过
-        sed -i 's/CMAKE_OPTIONS += -DLWS_WITH_ULOOP=ON/CMAKE_OPTIONS += -DLWS_WITH_ULOOP=ON -DLWS_WITH_LIBUV=ON/g' package/feeds/packages/libwebsockets/Makefile
+        #修复libwebsockets缺少-DLWS_WITH_LIBUV导致ttyd编译通不过..应该不需要了
+        #sed -i 's/CMAKE_OPTIONS += -DLWS_WITH_ULOOP=ON/CMAKE_OPTIONS += -DLWS_WITH_ULOOP=ON -DLWS_WITH_LIBUV=ON/g' package/feeds/packages/libwebsockets/Makefile
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
                 
@@ -117,11 +97,6 @@ jobs:
       id: compile
       run: |
         cd openwrt
-        #查一下cmake
-        #cmake --version
-        #把配置文件打包进来
-        #已经知道配置文件变动的原因了，以后不需要了
-        #cp .config files/etc/rax.conf
         echo -e "$(nproc) thread compile"
         make -j$(nproc) || make -j1 || make -j1 V=s
         echo "status=success" >> $GITHUB_OUTPUT
