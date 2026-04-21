@@ -14,8 +14,19 @@
 #更新golang,ddns-go
 rm -rf feeds/packages/lang/golang feeds/packages/net/ddns-go feeds/luci/applications/luci-app-ddns-go
 git clone https://github.com/kenzok8/golang -b 1.26 feeds/packages/lang/golang
-#强制更新ddns-go软件包
-./scripts/feeds install -f luci-app-ddns-go ddns-go
+git clone https://github.com/kenzok8/jell.git ../jell
+#直接添加太多软件包容易抽风，所以这里单独复制自己想要的软件包进去
+mkdir -p package/jell
+cp -r ../jell/quickstart package/jell/quickstart
+cp -r ../jell/luci-app-quickstart package/jell/luci-app-quickstart
+cp -r ../jell/floatip package/jell/floatip
+cp -r ../jell/luci-app-floatip package/jell/luci-app-floatip
+cp -r ../jell/ddns-go package/jell/ddns-go
+cp -r ../jell/luci-app-ddns-go package/jell/luci-app-ddns-go
+git clone https://github.com/sirpdboy/luci-app-watchdog.git package/watchdog
+#强制更新ddns-go软件包,好像并不需要直接编译就行
+#./scripts/feeds install -f luci-app-ddns-go
+#./scripts/feeds install -f ddns-go
 #修复ddns-go无法在升级时保留配置
 echo "/etc/ddns-go" >> package/base-files/files/etc/sysupgrade.conf
 #修复libxcrypt无法编译
