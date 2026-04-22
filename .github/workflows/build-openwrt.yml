@@ -84,11 +84,9 @@ jobs:
         cd openwrt
         make defconfig
         make download -j8
-        #将编译者的用户名写到os-release
+        #将编译者的用户名写到固件里
         sed -i 's/OPENWRT_DEVICE_MANUFACTURER="%M"/OPENWRT_DEVICE_MANUFACTURER="${{ github.repository_owner }}"/' package/base-files/files/usr/lib/os-release
         sed -i 's/OPENWRT_RELEASE="%D %V %C"/OPENWRT_RELEASE="%D %V %C by ${{ github.repository_owner }}"/' package/base-files/files/usr/lib/os-release
-        #修复libwebsockets缺少-DLWS_WITH_LIBUV导致ttyd编译通不过..应该不需要了
-        #sed -i 's/CMAKE_OPTIONS += -DLWS_WITH_ULOOP=ON/CMAKE_OPTIONS += -DLWS_WITH_ULOOP=ON -DLWS_WITH_LIBUV=ON/g' package/feeds/packages/libwebsockets/Makefile
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
                 
