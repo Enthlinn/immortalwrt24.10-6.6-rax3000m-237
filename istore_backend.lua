@@ -1,6 +1,6 @@
 -- Copyright 2022 xiaobao <xiaobao@linkease.com>
 -- Licensed to the public under the MIT License
-watchdog
+
 local http = require "luci.http"
 local nixio = require "nixio"
 local ltn12 = require "luci.ltn12"
