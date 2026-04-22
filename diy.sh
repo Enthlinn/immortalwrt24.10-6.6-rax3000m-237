@@ -9,13 +9,13 @@
 # File name: diy-part2.sh
 # Description: OpenWrt DIY script part 2 (After Update feeds)
 #
-
-# Modify default IP
-#更新golang,ddns-go
-rm -rf feeds/packages/lang/golang feeds/packages/net/ddns-go feeds/luci/applications/luci-app-ddns-go
+#在这里添加想要的软件源吧
+#建议先搜索rax3000m.config文件确认是否默认源里已经存在想要的软件包
+#更新golang
+rm -rf feeds/packages/lang/golang
 git clone https://github.com/kenzok8/golang -b 1.26 feeds/packages/lang/golang
+#直接添加太多软件包容易抽风，所以这里下载到项目外面再单独复制自己想要的软件包进去
 git clone https://github.com/kenzok8/jell.git ../jell
-#直接添加太多软件包容易抽风，所以这里单独复制自己想要的软件包进去
 mkdir -p package/jell
 cp -r ../jell/quickstart package/jell/quickstart
 cp -r ../jell/luci-app-quickstart package/jell/luci-app-quickstart
@@ -23,6 +23,7 @@ cp -r ../jell/floatip package/jell/floatip
 cp -r ../jell/luci-app-floatip package/jell/luci-app-floatip
 cp -r ../jell/ddns-go package/jell/ddns-go
 cp -r ../jell/luci-app-ddns-go package/jell/luci-app-ddns-go
+#其实jell源里也有watchdog，但我懒得改了
 git clone https://github.com/sirpdboy/luci-app-watchdog.git package/watchdog
 #强制更新ddns-go软件包,好像并不需要直接编译就行
 #./scripts/feeds install -f luci-app-ddns-go
