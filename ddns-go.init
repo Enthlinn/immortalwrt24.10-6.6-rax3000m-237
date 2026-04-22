@@ -1,5 +1,5 @@
 #!/bin/sh /etc/rc.common
-# Copyright (C) 2023 ImmortalWrt.org
+# Copyright (C) 2023 ImmortalWrt.org1
 
 START=99
 USE_PROCD=1
