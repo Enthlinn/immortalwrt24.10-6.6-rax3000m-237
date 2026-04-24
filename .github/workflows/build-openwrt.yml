@@ -183,7 +183,8 @@ jobs:
     - name: Delete old releases
       uses: sgpublic/delete-release-action@v1
       with:
-        keep-count: 3      # 保留最新3个
-        delete-tags: true
+        release-drop: true
+        release-keep-count: 2
+        release-drop-tag: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
