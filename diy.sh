@@ -30,8 +30,10 @@ cp -r ../jell/ddns-go package/jell/ddns-go
 cp -r ../jell/luci-app-ddns-go package/jell/luci-app-ddns-go
 #其实jell源里也有watchdog，但我懒得改了
 git clone https://github.com/sirpdboy/luci-app-watchdog.git package/watchdog
-#修复ddns-go无法在升级时保留配置
+#防止ddns-go无法在升级时保留配置
 echo "/etc/ddns-go" >> package/base-files/files/etc/sysupgrade.conf
+#防止openclash无法在升级时保留配置
+echo "/etc/openclash" >> package/base-files/files/etc/sysupgrade.conf
 #修复libxcrypt无法编译
 sed -i '3i PKG_FORTIFY_SOURCE=0' package/feeds/packages/libxcrypt/Makefile
 #修复quickstart温度显示
