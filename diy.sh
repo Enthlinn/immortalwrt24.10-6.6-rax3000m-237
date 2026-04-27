@@ -7,7 +7,7 @@
 #
 # https://github.com/P3TERX/Actions-OpenWrt
 #
-#在这里添加想要的软件源吧
+#在这里添加想要的软件包吧
 #建议先搜索rax3000m.config文件确认是否默认源里已经存在想要的软件包
 #如果存在想要的软件包比如openclash
 #可以直接在文件中将# CONFIG_PACKAGE_luci-app-openclash is not set改成CONFIG_PACKAGE_luci-app-openclash=y
@@ -38,3 +38,5 @@ sed -i '3i PKG_FORTIFY_SOURCE=0' package/feeds/packages/libxcrypt/Makefile
 wget -O package/jell/luci-app-quickstart/luasrc/controller/istore_backend.lua https://raw.githubusercontent.com/Enthlinn/immortalwrt24.10-6.6-rax3000m-237/refs/heads/openwrt-24.10-6.6/istore_backend.lua
 #修复可能存在的ddns-go无法从luci启动
 wget -O package/jell/ddns-go/file/ddns-go.init https://raw.githubusercontent.com/Enthlinn/immortalwrt24.10-6.6-rax3000m-237/refs/heads/openwrt-24.10-6.6/ddns-go.init
+#移除登录界面自动填入root账号，仅对argon主题生效
+sed -i 's|value="{{ entityencode(duser, true) }}"|value=""|g' package/feeds/luci/luci-theme-argon/ucode/template/themes/argon/sysauth.ut
