@@ -16,6 +16,13 @@
 #如果改了之后编译出来的固件中没有那个软件包就是依赖检查过不去被自动移除了
 #也可以直接使用sed修改,比如下面这行代码
 sed -i 's|# CONFIG_PACKAGE_luci-app-openclash is not set|CONFIG_PACKAGE_luci-app-openclash=y|g' .config
+#打包mate内核
+wget https://raw.githubusercontent.com/vernesong/OpenClash/core/master/meta/clash-linux-arm64.tar.gz
+tar zxvf clash-linux-arm64.tar.gz
+mv clash feeds/luci/applications/luci-app-openclash/root/etc/openclash/core/clash_meta
+rm -rf clash-linux-arm64.tar.gz
+wget https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat feeds/luci/applications/luci-app-openclash/root/etc/openclash/geoip.dat
+wget https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat feeds/luci/applications/luci-app-openclash/root/etc/openclash/geosite.dat
 #更新golang
 rm -rf feeds/packages/lang/golang
 git clone https://github.com/kenzok8/golang -b 1.26 feeds/packages/lang/golang
