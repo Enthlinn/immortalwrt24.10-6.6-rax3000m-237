@@ -89,7 +89,47 @@ jobs:
         sed -i 's/OPENWRT_RELEASE="%D %V %C"/OPENWRT_RELEASE="%D %V %C by ${{ github.repository_owner }}"/' package/base-files/files/usr/lib/os-release
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
-                
+
+    - name: Set user
+      run: |
+        # 进入源码中的基础文件目录
+        cd openwrt/package/base-files/files/etc
+        #添加编译者用户名到系统里
+        NEW_USER="${{ github.repository_owner }}"
+        ROOT_PASS=$(date +%s | sha256sum | head -c 16)
+        ROOT_ENCRYPTED=$(openssl passwd -1 "$ROOT_PASS")
+        # 生成随机 root 密码
+        ROOT_RANDOM_PASS=$(date +%s | sha256sum | head -c 16)
+        ROOT_ENCRYPTED=$(openssl passwd -1 "$ROOT_RANDOM_PASS")
+        # 1. 修改 passwd: 添加新用户并保留 root，UID 均为 0
+        echo "${NEW_USER}:x:0:0:${NEW_USER}:/root:/bin/ash" > passwd
+        echo "root:x:0:0:root:/root:/bin/ash" >> passwd
+        # 2. 修改 shadow: 新用户无密码(::)，root 使用加密后的随机密码
+        echo "${NEW_USER}::18758:0:99999:7:::" > shadow
+        echo "root:${ROOT_ENCRYPTED}:18758:0:99999:7:::" >> shadow
+        # 返回编译目录
+        cd ../../../../
+        #强制覆盖rpcd配置文件，添加新账户的登录权限
+        mkdir -p files/etc/config
+
+        cat <<EOF > files/etc/config/rpcd
+          config rpcd
+        	option socket /var/run/ubus/ubus.sock
+        	option timeout 30
+
+        config login
+        	option username '$NEW_USER'
+        	option password '\$p\$$NEW_USER'
+        	list read '*'
+        	list write '*'
+
+        config login
+        	option username 'root'
+        	option password '$p$root'
+        	list read '*'
+        	list write '*'
+        EOF
+
 
     - name: Compile the firmware
       id: compile
@@ -156,7 +196,7 @@ jobs:
         touch release.txt
         echo "cmcc_rax3000m-237大功率固件" >> release.txt
         echo "后台：192.168.6.1" >> release.txt
-        echo "账号：root" >> release.txt
+        echo "账号：${NEW_USER}" >> release.txt
         echo "密码：无" >> release.txt
         echo "默认主题：argon" >> release.txt
         echo "集成插件：floatip ddns-go quickstart watchdog smartdns upnp" >> release.txt
