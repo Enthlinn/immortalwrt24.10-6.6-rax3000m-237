@@ -15,7 +15,7 @@
 #理论上就可以直接编译了
 #如果改了之后编译出来的固件中没有那个软件包就是依赖检查过不去被自动移除了
 #也可以直接使用sed修改,比如下面这行代码
-#sed -i 's|# CONFIG_PACKAGE_luci-app-openclash is not set|CONFIG_PACKAGE_luci-app-openclash=y|g' .config
+sed -i 's|# CONFIG_PACKAGE_luci-app-openclash is not set|CONFIG_PACKAGE_luci-app-openclash=y|g' .config
 #更新golang
 rm -rf feeds/packages/lang/golang
 git clone https://github.com/kenzok8/golang -b 1.26 feeds/packages/lang/golang
