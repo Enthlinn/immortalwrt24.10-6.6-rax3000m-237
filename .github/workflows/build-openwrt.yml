@@ -221,7 +221,7 @@ jobs:
 
                 
     - name: Delete old releases
-      uses: sgpublic/delete-release-action@v1
+      uses: sgpublic/delete-release-action@v1.0
       with:
         release-drop: true
         release-keep-count: 2
