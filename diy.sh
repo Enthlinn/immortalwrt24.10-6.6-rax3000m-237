@@ -19,10 +19,11 @@ sed -i 's|# CONFIG_PACKAGE_luci-app-openclash is not set|CONFIG_PACKAGE_luci-app
 #打包mate内核
 wget https://raw.githubusercontent.com/vernesong/OpenClash/core/master/meta/clash-linux-arm64.tar.gz
 tar zxvf clash-linux-arm64.tar.gz
-mv clash feeds/luci/applications/luci-app-openclash/root/etc/openclash/core/clash_meta
+mkdir -p flies/etc/openclash/core
+mv clash flies/etc/openclash/core/clash_meta
 rm -rf clash-linux-arm64.tar.gz
-wget https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat feeds/luci/applications/luci-app-openclash/root/etc/openclash/geoip.dat
-wget https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat feeds/luci/applications/luci-app-openclash/root/etc/openclash/geosite.dat
+wget https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat flies/etc/openclash/core/geoip.dat
+wget https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat flies/etc/openclash/core/geosite.dat
 #更新golang
 rm -rf feeds/packages/lang/golang
 git clone https://github.com/kenzok8/golang -b 1.26 feeds/packages/lang/golang
