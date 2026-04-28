@@ -220,11 +220,21 @@ jobs:
         keep_minimum_runs: 3
 
                 
-    - name: Delete old releases
-      uses: sgpublic/delete-release-action@v1.0
-      with:
-        release-drop: true
-        release-keep-count: 2
-        release-drop-tag: true
+    - name: Keep only latest 3 releases
+      run: |
+        # 1. 获取所有 Release 的 tag，按创建时间从新到旧排序
+        # 2. 使用 jq 筛选出排在第 3 名之后的所有 tag
+        RELEASES_TO_DELETE=$(gh release list --limit 100 --json tagName,createdAt --jq 'sort_by(.createdAt) | reverse | .[3:][].tagName')
+
+        if [ -z "$RELEASES_TO_DELETE" ]; then
+          echo "不需要删除：当前 Release 总数小于或等于 3 个。"
+        else
+          for TAG in $RELEASES_TO_DELETE; do
+            echo "正在删除旧版本: $TAG"
+            # --cleanup-tag 会同时删除关联的 Git Tag，如果不希望删除 Tag 请去掉该参数
+            gh release delete "$TAG" --yes --cleanup-tag
+          done
+        fi
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
