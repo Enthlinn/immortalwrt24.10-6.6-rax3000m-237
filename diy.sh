@@ -22,8 +22,8 @@ tar zxvf clash-linux-arm64.tar.gz
 mkdir -p files/etc/openclash/core
 mv clash files/etc/openclash/core/clash_meta
 rm -rf clash-linux-arm64.tar.gz
-wget -O files/etc/openclash/core/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
-wget -O files/etc/openclash/core/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
+wget -O files/etc/openclash/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
+wget -O files/etc/openclash/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
 #更新golang
 rm -rf feeds/packages/lang/golang
 git clone https://github.com/kenzok8/golang -b 1.26 feeds/packages/lang/golang
