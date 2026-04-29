@@ -51,3 +51,14 @@ wget -O package/jell/luci-app-quickstart/luasrc/controller/istore_backend.lua ht
 wget -O package/jell/ddns-go/file/ddns-go.init https://raw.githubusercontent.com/Enthlinn/immortalwrt24.10-6.6-rax3000m-237/refs/heads/openwrt-24.10-6.6/ddns-go.init
 #移除登录界面自动填入root账号，仅对argon主题生效
 sed -i 's|value="{{ entityencode(duser, true) }}"|value=""|g' package/feeds/luci/luci-theme-argon/ucode/template/themes/argon/sysauth.ut
+#通过uci-defaults脚本把5GWIFI发射功率改成25
+mkdir -p files/etc/uci-defaults
+cat <<EOF > files/etc/uci-defaults/99-custom-e2p
+#!/bin/sh
+TARGET="/lib/firmware/e2p"
+if [ -f "\$TARGET" ]; then
+printf '\x2b\x2b\x2b\x2b\x2b\x2b\x2b\x2b\x2b\x2b\x2b\x2b\x2b\x2b\x2b\x2b\x2b\x2b\x2b\x2b' | \
+dd of="\$TARGET" bs=1 seek=\$((0x445)) conv=notrunc
+fi
+exit 0
+EOF
