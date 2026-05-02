@@ -25,7 +25,7 @@
 #wget -O files/etc/openclash/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
 #wget -O files/etc/openclash/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
 #编译openclash太费劲了，还是不开了吧
-#更新golang
+#更新golang，删掉自带的ddns-go
 rm -rf feeds/packages/lang/golang feeds/packages/net/ddns-go feeds/luci/applications/luci-app-ddns-go
 git clone https://github.com/kenzok8/golang -b 1.26 feeds/packages/lang/golang
 #直接添加太多软件包容易抽风，所以这里下载到项目外面再单独复制自己想要的软件包进去
